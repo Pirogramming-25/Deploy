@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ devtool.name }} · SWIDEA{% endblock %}
+
+{% block body %}
+<article class="detail-tool">
+  <p class="eyebrow">DEV TOOL</p>
+  <h1>{{ devtool.name }}</h1>
+  <span class="tool-kind big">{{ devtool.get_kind_display }}</span>
+
+  <div class="detail-content">{{ devtool.content|linebreaks }}</div>
+
+  <div class="btn-row">
+    <a href="{% url 'devtool_update' devtool.id %}" class="btn">수정</a>
+    <form action="{% url 'devtool_delete' devtool.id %}" method="post"
+          onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline">
+      {% csrf_token %}
+      <button type="submit" class="btn danger">삭제</button>
+    </form>
+    <a href="{% url 'devtool_list' %}" class="btn ghost">목록</a>
+  </div>
+
+  <h2 class="section-title">이 개발툴을 사용하는 아이디어</h2>
+  <div class="tool-idea-list">
+    {% for idea in ideas %}
+      <a href="{% url 'idea_detail' idea.id %}" class="tool-idea-item">
+        {% if idea.image %}<img src="{{ idea.image.url }}" alt="">{% else %}<span class="mini-empty">?</span>{% endif %}
+        <span>{{ idea.title }}</span>
+      </a>
+    {% empty %}
+      <p class="empty">아직 이 개발툴을 사용하는 아이디어가 없습니다.</p>
+    {% endfor %}
+  </div>
+</article>
+{% endblock %}

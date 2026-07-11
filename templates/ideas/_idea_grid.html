@@ -1,0 +1,50 @@
+{% load static %}
+<div class="grid">
+  {% for idea in page_obj %}
+    <article class="card">
+      <div class="thumb">
+        {% if idea.image %}
+          <img src="{{ idea.image.url }}" alt="{{ idea.title }}">
+        {% else %}
+          <div class="thumb-empty">이미지 없음</div>
+        {% endif %}
+        <button class="star-btn {% if idea.id in starred_ids %}on{% endif %}"
+                data-star-url="{% url 'toggle_star' idea.id %}"
+                aria-label="찜하기">
+          <span class="star-icon">★</span>
+          <span class="star-count">{{ idea.num_stars }}</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <a href="{% url 'idea_detail' idea.id %}" class="card-title">{{ idea.title }}</a>
+        <div class="card-meta">
+          {% if idea.devtool %}
+            <a href="{% url 'devtool_detail' idea.devtool.id %}" class="tool-chip">{{ idea.devtool.name }}</a>
+          {% endif %}
+        </div>
+        <div class="interest" data-interest-url="{% url 'change_interest' idea.id %}">
+          <span class="interest-label">관심도</span>
+          <button class="interest-btn" data-action="decrease">−</button>
+          <span class="interest-value">{{ idea.interest }}</span>
+          <button class="interest-btn" data-action="increase">+</button>
+        </div>
+      </div>
+    </article>
+  {% empty %}
+    <p class="empty">등록된 아이디어가 없습니다. 첫 아이디어를 만들어 보세요.</p>
+  {% endfor %}
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="pagination">
+  {% if page_obj.has_previous %}
+    <button class="page-btn" data-page="{{ page_obj.previous_page_number }}">‹ 이전</button>
+  {% endif %}
+  {% for n in page_obj.paginator.page_range %}
+    <button class="page-btn {% if n == page_obj.number %}active{% endif %}" data-page="{{ n }}">{{ n }}</button>
+  {% endfor %}
+  {% if page_obj.has_next %}
+    <button class="page-btn" data-page="{{ page_obj.next_page_number }}">다음 ›</button>
+  {% endif %}
+</nav>
+{% endif %}

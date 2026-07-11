@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}아이디어 · SWIDEA{% endblock %}
+
+{% block body %}
+<header class="page-head">
+  <div>
+    <p class="eyebrow">IDEA BOARD</p>
+    <h1>아이디어 관리</h1>
+  </div>
+</header>
+
+<div class="toolbar">
+  <input type="search" id="search-input" class="search"
+         placeholder="제목 또는 개발툴로 검색…" value="{{ query }}">
+  <select id="sort-select" class="sort">
+    {% for key, opt in sort_options.items %}
+      <option value="{{ key }}" {% if key == sort %}selected{% endif %}>{{ opt.0 }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div id="idea-container">
+  {% include 'ideas/_idea_grid.html' %}
+</div>
+{% endblock %}

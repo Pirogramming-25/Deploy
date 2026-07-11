@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}회원가입 · SWIDEA{% endblock %}
+
+{% block body %}
+<div class="form-wrap narrow">
+  <p class="eyebrow">SIGN UP</p>
+  <h1>회원가입</h1>
+  <form method="post" class="form">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}
+        {% for e in field.errors %}<span class="err">{{ e }}</span>{% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn">가입하기</button>
+  </form>
+  <p class="form-foot">이미 계정이 있으신가요? <a href="{% url 'login' %}">로그인</a></p>
+</div>
+{% endblock %}

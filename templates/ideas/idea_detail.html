@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ idea.title }} · SWIDEA{% endblock %}
+
+{% block body %}
+<article class="detail">
+  <div class="detail-media">
+    {% if idea.image %}
+      <img src="{{ idea.image.url }}" alt="{{ idea.title }}">
+    {% else %}
+      <div class="thumb-empty large">이미지 없음</div>
+    {% endif %}
+    <button class="star-btn {% if is_starred %}on{% endif %}"
+            data-star-url="{% url 'toggle_star' idea.id %}"
+            aria-label="찜하기">
+      <span class="star-icon">★</span>
+      <span class="star-count">{{ idea.num_stars }}</span>
+    </button>
+  </div>
+
+  <div class="detail-info">
+    <p class="eyebrow">IDEA</p>
+    <h1>{{ idea.title }}</h1>
+
+    <div class="detail-meta">
+      {% if idea.devtool %}
+        <a href="{% url 'devtool_detail' idea.devtool.id %}" class="tool-chip big">
+          🛠 {{ idea.devtool.name }}
+        </a>
+      {% endif %}
+      <span class="date">등록 {{ idea.created_at|date:"Y.m.d H:i" }}</span>
+    </div>
+
+    <div class="interest big" data-interest-url="{% url 'change_interest' idea.id %}">
+      <span class="interest-label">관심도</span>
+      <button class="interest-btn" data-action="decrease">−</button>
+      <span class="interest-value">{{ idea.interest }}</span>
+      <button class="interest-btn" data-action="increase">+</button>
+    </div>
+
+    <div class="detail-content">{{ idea.content|linebreaks }}</div>
+
+    <div class="btn-row">
+      <a href="{% url 'idea_update' idea.id %}" class="btn">수정</a>
+      <form action="{% url 'idea_delete' idea.id %}" method="post"
+            onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="btn danger">삭제</button>
+      </form>
+      <a href="{% url 'idea_list' %}" class="btn ghost">목록</a>
+    </div>
+  </div>
+</article>
+{% endblock %}
